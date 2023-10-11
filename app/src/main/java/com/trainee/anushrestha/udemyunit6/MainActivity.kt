@@ -12,13 +12,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +38,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.trainee.anushrestha.udemyunit6.ui.theme.UdemyUnit6Theme
+import com.trainee.anushrestha.udemyunit6.ui.theme.activeColor
+import com.trainee.anushrestha.udemyunit6.ui.theme.tryColor
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,22 +51,53 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
+ @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileCardLayout() {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = Color.LightGray){
+    Scaffold(topBar = { AppBar() }) { paddingValues ->
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+        ) {
+            Column {
+                ProfileCard()
+                ProfileCard()
+            }
+        }
     }
-    ProfileCard()
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppBar(){
+    TopAppBar(
+        navigationIcon = {
+                         IconButton(onClick = { /*TODO*/ }) {
+                             Icon(imageVector = Icons.Default.ArrowBack, contentDescription = " ", modifier = Modifier.padding(4.dp))
+                         }
+        },
+        title = {
+            Text(text = "Chat status",
+                style = MaterialTheme.typography.headlineLarge) },
+    )
+
+}
+
 
 @Composable
 fun ProfileCard(){
     Card(
-        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 8.dp)
+            .wrapContentHeight(align = Alignment.Top),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 8.dp)
+            defaultElevation = 8.dp),
+        shape = CutCornerShape(topEnd = 25.dp)
+
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -73,7 +115,8 @@ fun ProfileCard(){
 @Composable
 fun ProfilePicture(){
     Card(shape = CircleShape,
-        border = BorderStroke(3.dp, Color.Red),
+        border = BorderStroke(width = 3.dp,
+            color = MaterialTheme.colorScheme.activeColor),
         modifier = Modifier.padding(4.dp),
         elevation = CardDefaults.cardElevation(5.dp)
     ) {
@@ -86,10 +129,12 @@ fun ProfilePicture(){
 
 @Composable
 fun ProfileContent(){
-    Column(modifier = Modifier.padding(4.dp).fillMaxWidth()){
+    Column(modifier = Modifier
+        .padding(4.dp)
+        .fillMaxWidth()){
         Text(text = "Name : Surprised person",
             style = MaterialTheme.typography.headlineSmall)
-        Text(text = "Not active",
+        Text(text = "Inactive",
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.alpha(0.5f))
 
