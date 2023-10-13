@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
 }
  @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileCardLayout() {
+fun ProfileCardLayout(profileDetailing : List<ProfileDetails> = profileDetailsList) {
     Scaffold(topBar = { AppBar() }) { paddingValues ->
         Surface(
             modifier = Modifier
@@ -61,8 +61,9 @@ fun ProfileCardLayout() {
                 .padding(paddingValues),
         ) {
             Column {
-                ProfileCard()
-                ProfileCard()
+                for(profileDetails in profileDetailing) {
+                    ProfileCard(profileDetails = profileDetails)
+                }
             }
         }
     }
@@ -84,9 +85,8 @@ fun AppBar(){
 
 }
 
-
 @Composable
-fun ProfileCard(){
+fun ProfileCard(profileDetails: ProfileDetails){
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -104,8 +104,8 @@ fun ProfileCard(){
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ){
-            ProfilePicture()
-            ProfileContent()
+            ProfilePicture(profileDetails.drawableImage, profileDetails.status)
+            ProfileContent(profileDetails.name, profileDetails.status)
         }
 
     }
@@ -113,14 +113,18 @@ fun ProfileCard(){
 }
 
 @Composable
-fun ProfilePicture(){
+    fun ProfilePicture(drawableImage: Int, onlineStatus : Boolean){
+    //taking online status as we might change the borderStroke acc to status of users
     Card(shape = CircleShape,
         border = BorderStroke(width = 3.dp,
-            color = MaterialTheme.colorScheme.activeColor),
+            color = if(onlineStatus)
+                        MaterialTheme.colorScheme.activeColor
+                            else
+                                Color.Red),
         modifier = Modifier.padding(4.dp),
         elevation = CardDefaults.cardElevation(5.dp)
     ) {
-        Image(painter = painterResource(id = R.drawable.pp),
+        Image(painter = painterResource(id = drawableImage),
             contentDescription ="" ,
             contentScale = ContentScale.Crop,
             modifier=Modifier.size(80.dp))
@@ -128,15 +132,22 @@ fun ProfilePicture(){
 }
 
 @Composable
-fun ProfileContent(){
+fun ProfileContent(name : String, onlineStatus : Boolean){
+    //taking online status as we might change the
+    // text acc. to status of users
+
     Column(modifier = Modifier
         .padding(4.dp)
         .fillMaxWidth()){
-        Text(text = "Name : Surprised person",
+        Text(text = name,
             style = MaterialTheme.typography.headlineSmall)
-        Text(text = "Inactive",
+        Text(text = if(onlineStatus)
+                        "Active"
+                            else
+                                "Inactive",
             style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.alpha(0.5f))
+            modifier =
+            Modifier.alpha(0.5f))
 
     }
 }
